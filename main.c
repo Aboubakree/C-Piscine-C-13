@@ -6,11 +6,25 @@
 /*   By: akrid <akrid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 10:13:35 by akrid             #+#    #+#             */
-/*   Updated: 2024/07/20 13:26:49 by akrid            ###   ########.fr       */
+/*   Updated: 2024/08/27 10:07:55 by akrid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_btree.h"
+
+int compair(void *x1, void *x2)
+{
+	if (*((int *)x1) > *((int *)x2))
+		return (1);
+	if (*((int *)x1) < *((int *)x2))
+		return (-1);
+	return (0);
+}
+
+void applyf(void *item)
+{
+	printf("%d ", *((int *)item));
+}
 
 int	*generate_random_int()
 {
@@ -42,6 +56,7 @@ void	create_tree(t_btree **root, int lvl)
 
 void	print_tree(t_btree *root, int *index)
 {
+	// print tree using prefix traversel !!?
 	if (root == NULL)
 		return ;
 	printf("node : %d\nvalue : %d\n", *index, *((int *)root->item));
@@ -50,9 +65,16 @@ void	print_tree(t_btree *root, int *index)
 	print_tree(root->right, index);
 }
 
-void	free_tree(t_btree)
+void	free_tree(t_btree *root)
 {
-	
+	if (root && root->left)
+		free_tree(root->left);
+	if (root && root->right)
+		free_tree(root->right);
+	if (root && root->item)
+		free(root->item);
+	if (root)
+		free(root);
 }
 
 int main()
@@ -62,6 +84,19 @@ int main()
 
 	root = NULL;
 	index = 0;
-	create_tree(&root, 4);
+	// create_tree(&root, 3);
+	// print_tree(root, &index);
+	// btree_apply_prefix(root, applyf);
+	// printf("\n+++++++++++++++++++++++++++\n");
+	// btree_apply_infix(root, applyf);
+	// printf("\n+++++++++++++++++++++++++++\n");
+	// btree_apply_suffix(root, applyf);
+	// printf("\n+++++++++++++++++++++++++++\n");
+	btree_insert_data(&root, generate_random_int(), compair);
+	btree_insert_data(&root, generate_random_int(), compair);
+	btree_insert_data(&root, generate_random_int(), compair);
+	btree_insert_data(&root, generate_random_int(), compair);
+	index = 0;
 	print_tree(root, &index);
+	free_tree(root);
 }
